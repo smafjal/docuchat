@@ -22,10 +22,12 @@ class RetrieverAgent:
     """
 
     def __init__(self, api_name: str = API_NAME):
-        self.retriever = VectorStoreManager(api_name).get_retriever()
+        self.llm = get_llm(api_name)
+        # self.retriever = VectorStoreManager(api_name).get_retriever(k=3)
+        self.retriever = VectorStoreManager(api_name).get_multi_query_retriever(self.llm)
         self.tools = self.build_tools()
         self.tools_dict = {tool.name: tool for tool in self.tools}
-        self.llm = get_llm(api_name).bind_tools(self.tools)
+        self.llm = self.llm.bind_tools(self.tools)
         self.graph = self.build_graph()
         self.system_prompt = SYSTEM_PROMPT_1
 

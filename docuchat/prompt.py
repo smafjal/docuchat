@@ -1,3 +1,5 @@
+from langchain.prompts import PromptTemplate
+
 SYSTEM_PROMPT_1 = """
 You are a helpful and intelligent AI assistant specialized in answering questions using the content of uploaded PDF documents.
 
@@ -33,3 +35,13 @@ If no relevant information is found, say:
 
 Only rely on content from the documents unless otherwise instructed.
 """
+
+RETRIEVER_QUERY_PROMPT = PromptTemplate(
+    input_variables=["question"],
+    template="""You are an AI language model assistant. Your task is to generate five
+    different versions of the given user question to retrieve relevant documents from
+    a vector database. By generating multiple perspectives on the user question, your
+    goal is to help the user overcome some of the limitations of the distance-based
+    similarity search. Provide these alternative questions separated by newlines.
+    Original question: {question}""",
+)
