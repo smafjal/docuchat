@@ -4,8 +4,18 @@ from .vector import VectorStoreManager
 from .config import API_NAME
 from .data_loader import PDFProcessor
 from .agent import RetrieverAgent
+from rich.console import Console
+from rich.progress import Progress, SpinnerColumn, TextColumn
 
 app = typer.Typer()
+
+def load_agent():
+    console = Console()
+    with Progress(SpinnerColumn(), TextColumn("[progress.description]{task.description}"), transient=True, console=console) as progress:
+        progress.add_task(description="Loading agent...", total=None)
+        app_agent = RetrieverAgent(api_name=API_NAME)
+    return app_agent
+
 
 @app.command()
 def ingest(pdfdir: str = "data/pdfs"):
@@ -24,7 +34,7 @@ def ingest(pdfdir: str = "data/pdfs"):
 
 @app.command()
 def chat():
-    app_agent = RetrieverAgent(api_name=API_NAME)
+    app_agent = load_agent()
     print("\n🤖 Docuchat ready! Type your questions (exit to quit)")
     while True:
         question = input("You: ").strip()
